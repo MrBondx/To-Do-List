@@ -6,7 +6,18 @@
 			
 			document.addEventListener("DOMContentLoaded", function(){
 
-			document.querySelector('#save').disabled = true			
+			document.querySelector('#save').disabled = true	
+			
+			if(JSON.parse(!localStorage.getItem('task_arr'))){
+                        localStorage.setItem('task_arr',JSON.stringify([]))
+                    }
+
+                let task_list = JSON.parse(localStorage.getItem('task_arr'))
+                for(let x of task_list){
+                    const li = document.createElement('li');
+                    li.innerHTML=`${x}`
+                    document.querySelector('#list').append(li);
+                }
 
 			document.querySelector('#task').onkeyup = ()=>{
 
@@ -19,13 +30,20 @@
 			}
 
 			document.querySelector("form").onsubmit = (e)=>{
+			let task_arr = JSON.parse(localStorage.getItem('task_arr'))
 			const task = document.querySelector('#task').value
 			//console.log(task)
-			const li = document.createElement('li')			
-			li.innerHTML = `${task}`
-			document.querySelector('#list').append(li)			
+			//const li = document.createElement('li')			
+			//li.innerHTML = `${task}`
+			//document.querySelector('#list').append(li)
+			
+			task_arr.push(`${task}`)
+            localStorage.setItem('task_arr', JSON.stringify(task_arr))      
+                     
+
 			document.querySelector('#task').value = ''
 			document.querySelector('#save').disabled = true
+			window.location.reload();
 			e.preventDefault();
 			}
 			})
@@ -37,7 +55,7 @@
 		<h1> TASKS </h1>
 
 		<form>
-			<input id="task" type="text" autofocus>
+			<input id="task" type="text" placeholder="Add Task" autofocus>
 			<input id="save" type="submit">			
 
 		</form>
